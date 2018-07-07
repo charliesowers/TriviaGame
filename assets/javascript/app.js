@@ -1,6 +1,15 @@
 
 window.onload = function() {
 
+    $(".answer-choice").click(function(){
+        if($(this).attr("id") === "abcd".charAt(game.question.correct)){
+            game.endQuestion("That's Right!", true);
+        }
+        else{
+            game.endQuestion("Nope", false);
+        }
+    });
+
     game.start();
 
 };
@@ -17,13 +26,14 @@ var intervalId;
     // prevents the clock from being sped up unnecessarily
 var clockRunning = false;
 
-    //  Our game object.
+    //  game object.
 var game = {
 
     questions: [
         new Question("Which letter?", ["A", "B", "C", "D"], 1),
         new Question("Which letter?", ["A", "B", "C", "D"], 0),
         new Question("Which letter?", ["A", "B", "C", "D"], 2),
+        new Question("Which letter?", ["A", "B", "C", "D"], 3),
     ],
 
     time: 10,
@@ -32,25 +42,27 @@ var game = {
     wrong: 0,
     right: 0,
 
+    answers: $("#answers"),
+
     reset: function() {
+
+        console.log("reset");
 
         game.time = 10;
         game.stopTime();
-        game.questionInd++;
 
-        //  TODO: Change the "display" div to "00:00."
         $("#display").text("10");
-        $("#laps").empty();
+
+        $("body").append(game.answers);
 
         game.start();
 
     },
 
     start: function() {
+        
         game.question = game.questions[game.questionInd];
-        //console.log(game.question);
-
-        //  TODO: Use setInterval to start the count here and set the clock to running.
+        console.log("start");
 
         $("h1").text(game.question.qtext);
         $("#a").text(game.question.options[0]);
@@ -59,64 +71,52 @@ var game = {
         $("#d").text(game.question.options[3]);
 
         if (!clockRunning) {
-        intervalID = setInterval(game.count, 1000);
-        clockRunning = true;
+            intervalID = setInterval(game.count, 1000);
+            clockRunning = true;
         }
-        $(".answer-choice").click(function(){
-            if($(this).attr("id") === "abcd".charAt(game.question.correct)){
-                game.correctGuess();
-            }
-            else{
-                game.incorrectGuess();
-            }
-        });
-
     },
+
     stopTime: function() {
 
-        //  TODO: Use clearInterval to stop the count here and set the clock to not be running.
+        console.log("stopTime");
+        
         clearInterval(intervalID);
         clockRunning = false;
     },
 
-    correctGuess: function() {
-        $("h1").text("That's Right!");
-        $(".answer-choice").empty();
-        game.stopTime()
-        setTimeout(game.reset, 1000 * 5);
-        game.right++;
-        
+    endQuestion: function(disp, cval){
+        console.log(game.answers);
+        $("#display").empty();
+        $("h1").text(disp);
+        $("#answers").detach();
+        game.stopTime();
+        cval ? game.right++ : game.wrong++;
+        game.questionInd++;
+        if(game.questionInd === game.questions.length){
+            setTimeout(game.endgame, 1000 * 3);
+        }
+        else{
+            setTimeout(game.reset, 1000 * 3);
+        }
     },
 
-    incorrectGuess: function() {
-        $("h1").text("Nope");
-        $(".answer-choice").empty();
-        game.stopTime()
-        game.wrong++;
-        setTimeout(game.reset, 1000 * 5);
-    },
     count: function() {
-
-        //  TODO: increment time by 1, remember we cant use "this" here.
-
-        //  TODO: Get the current time, pass that into the game.timeConverter function,
-        //        and save the result in a variable.
-
-        //  TODO: Use the variable you just created to show the converted time in the "display" div.
 
         game.time--;
         if(game.time === 0){
-            $("h1").text("Time's Up!");
-            $(".answer-choice").empty();
-            game.stopTime();
-            game.wrong++;
-            setTimeout(game.reset, 1000 * 5);
+            game.endQuestion("Time's Up!", false);
         }
+        else{
         $("#display").text(game.time);
-
+        }
     },
     endgame: function(){
-        //reset logic here
+        $("#display").text("Number right: " + game.right + ", Number wrong: "+ game.wrong);
+        $("h1").text("Quiz Over!");
+        game.questionInd = 0;
+        game.right = 0;
+        game.wrong = 0;
+        setTimeout(game.reset, 1000 * 3);
     }
     
 };
