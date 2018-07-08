@@ -63,7 +63,7 @@ var game = {
 
     reset: function() {
 
-        console.log("reset");
+        $("h5").empty();
 
         game.time = 10;
         game.stopTime();
@@ -79,7 +79,6 @@ var game = {
     start: function() {
         
         game.question = game.questions[game.questionInd];
-        console.log("start");
 
         $("h1").text(game.question.qtext);
         $("#a").text(game.question.options[0]);
@@ -94,15 +93,11 @@ var game = {
     },
 
     stopTime: function() {
-
-        console.log("stopTime");
-        
         clearInterval(intervalID);
         clockRunning = false;
     },
 
     endQuestion: function(disp, cval){
-        console.log(game.answers);
         $("#display").empty();
         $("h1").text(disp + " The answer was " + game.question.options[game.question.correct]);
         $("#answers").detach();
@@ -118,7 +113,6 @@ var game = {
     },
 
     count: function() {
-
         game.time--;
         if(game.time === 0){
             game.endQuestion("Time's Up!", false);
