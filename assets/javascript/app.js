@@ -1,4 +1,3 @@
-
 window.onload = function() {
 
     $(".answer-choice").click(function(){
@@ -30,10 +29,28 @@ var clockRunning = false;
 var game = {
 
     questions: [
-        new Question("Which letter?", ["A", "B", "C", "D"], 1),
-        new Question("Which letter?", ["A", "B", "C", "D"], 0),
-        new Question("Which letter?", ["A", "B", "C", "D"], 2),
-        new Question("Which letter?", ["A", "B", "C", "D"], 3),
+        new Question("What is the deepest point in the Atlantic Ocean?", 
+        ["Mariana Trench", "Puerto Rico Trench", 
+        "South Sandwich Trench", "Intermontane Trench"], 1),
+        new Question("How many 360 degree rotations does the Earth make in one full trip around the sun?", 
+        ["364.25", "365.25", "366.25", "367.25"], 2),
+        new Question("What animal has the most deadly venom?", 
+        ["Geographic Cone Snail", "Blue-ring Octopus", "Inland Taipan Snake", "Box Jellyfish"], 0),
+        new Question("What panet's orbit is most nearby to Earth's orbit?", 
+        ["Mercury", "Venus", "Mars", "Jupiter"], 1),
+        new Question("What is the longest mountain range in the world?", 
+        ["Alps", "Himalayas", "Appalachian", "Andes"], 3),
+        new Question("What is the radius of the Earth in miles?", 
+        ["3,959", "7,233", "2,518", "9,454"], 0),
+        new Question("Which animal is the fastest swimmer in the world?", 
+        ["Marlin", "Giant Squid", "Sailfish", "Killer Whale"], 2),
+        new Question("What is the geographical name for a group of islands?", 
+        ["Archipelago", "Atoll", "Peninsula", "Chaparral"], 0),
+        new Question("What Continent are Potatoes indigenous to?", 
+        ["Europe", "Africa", "Asia", "South America"], 3),
+        new Question("Which type of organism is Yeast?", 
+        ["Bacteria", "Fungus", "Plant", "Animal"], 1)
+        
     ],
 
     time: 10,
@@ -53,7 +70,7 @@ var game = {
 
         $("#display").text("10");
 
-        $("body").append(game.answers);
+        $("#container").append(game.answers);
 
         game.start();
 
@@ -87,7 +104,7 @@ var game = {
     endQuestion: function(disp, cval){
         console.log(game.answers);
         $("#display").empty();
-        $("h1").text(disp);
+        $("h1").text(disp + " The answer was " + game.question.options[game.question.correct]);
         $("#answers").detach();
         game.stopTime();
         cval ? game.right++ : game.wrong++;
@@ -111,7 +128,7 @@ var game = {
         }
     },
     endgame: function(){
-        $("#display").text("Number right: " + game.right + ", Number wrong: "+ game.wrong);
+        $("h5").text("Number right: " + game.right + ", Number wrong: "+ game.wrong);
         $("h1").text("Quiz Over!");
         game.questionInd = 0;
         game.right = 0;
